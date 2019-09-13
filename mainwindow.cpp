@@ -21,6 +21,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+
     QString choice = ui->listWidget->currentItem()->text();
     if (choice == "RS485") {
         RS485 *rs = new RS485();

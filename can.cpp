@@ -1,11 +1,16 @@
 #include "can.h"
 #include "ui_can.h"
+#include <QtSerialPort>
+#include <QSerialPortInfo>
 
 CAN::CAN(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CAN)
 {
     ui->setupUi(this);
+    auto ports = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo& info : ports)
+        ui->listWidget->addItem(info.portName());
 }
 
 CAN::~CAN()
@@ -13,7 +18,7 @@ CAN::~CAN()
     delete ui;
 }
 
-void CAN::on_pushButton_clicked()
+void CAN::on_pushButton_3_clicked()
 {
     this->close();
 }
