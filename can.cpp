@@ -1,7 +1,5 @@
 #include "can.h"
 #include "ui_can.h"
-#include <QtSerialPort>
-#include <QSerialPortInfo>
 
 CAN::CAN(QWidget *parent) :
     QWidget(parent),

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <can.h>
+#include <rs485.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,6 +16,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    CAN *canWindow = new CAN;
+    RS485 *rsWindow = new RS485();
 
 private slots:
     void on_pushButton_clicked();
