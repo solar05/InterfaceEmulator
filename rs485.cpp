@@ -48,14 +48,6 @@ void RS485::on_pushButton_clicked()
     qDebug() << textToSend;
     ui->textEdit_2->clear();
     port.flush();
-    /*
-    port.close();
-    if (port.isOpen()) {
-        qDebug() << "port is open";
-    } else {
-        qDebug() << "port is closed";
-    }
-    this->close();*/
 }
 
 void RS485::on_pushButton_2_clicked()

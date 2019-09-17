@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <can.h>
-#include <rs485.h>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,11 +17,27 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    CAN *canWindow = new CAN;
-    RS485 *rsWindow = new RS485();
+    QSerialPort port;
+    QSerialPort::DataBits dataBits;
+    QSerialPort::Parity parity;
+    QSerialPort::StopBits stopBits;
+    QSerialPort::FlowControl flowControl;
+    QTimer *timer;
+    QString interface[2] = {"0:", "1:"};
+    QString currentInterface;
 
 private slots:
+    void setInterface(QString);
+
+    void timerExec();
+
+    void on_selectButton_clicked();
+
+    void on_closeButton_clicked();
+
     void on_pushButton_clicked();
+
+    void setBaud(int);
 
 private:
     Ui::MainWindow *ui;

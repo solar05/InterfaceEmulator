@@ -16,18 +16,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    can.cpp \
     main.cpp \
     mainwindow.cpp \
     rs485.cpp
 
 HEADERS += \
-    can.h \
     mainwindow.h \
     rs485.h
 
 FORMS += \
-    can.ui \
     mainwindow.ui \
     rs485.ui
 
