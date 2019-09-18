@@ -23,16 +23,19 @@ public:
     QSerialPort::StopBits stopBits;
     QSerialPort::FlowControl flowControl;
     QTimer *timer;
-    QString interface = "0:";
+    QString interfaceMap[2] = {"0:", "1:"};
+    QString currentInterface;
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
-    void on_pushButton_3_clicked();
-
     void timerExec();
+
+    void on_selectButton_clicked();
+
+    void on_closeButton_clicked();
+
+    void on_sendButton_clicked();
+
+    void setInterface(QString);
 
 private:
     Ui::RS485 *ui;
