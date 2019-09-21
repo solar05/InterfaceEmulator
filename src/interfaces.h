@@ -25,6 +25,7 @@ public:
     QTimer *timer;
     QString interfaceMap[2] = {"0:", "1:"};
     QString currentInterface;
+    void updatePorts();
 
 private slots:
     void timerExec();
@@ -36,6 +37,8 @@ private slots:
     void on_sendButton_clicked();
 
     void setInterface(QString);
+
+    void on_portRefresh_clicked();
 
 private:
     Ui::RS485 *ui;

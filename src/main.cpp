@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include <rs485.h>
+#include <interfaces.h>
 
 int main(int argc, char *argv[])
 {

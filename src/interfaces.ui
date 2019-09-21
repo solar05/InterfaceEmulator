@@ -99,14 +99,21 @@
        <item>
         <widget class="QPushButton" name="selectButton">
          <property name="text">
-          <string>Select Port</string>
+          <string>Select port</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="portRefresh">
+         <property name="text">
+          <string>Refresh ports</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="closeButton">
          <property name="text">
-          <string>Close Port</string>
+          <string>Close port</string>
          </property>
         </widget>
        </item>

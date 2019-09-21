@@ -1,4 +1,4 @@
-#include "rs485.h"
+#include "interfaces.h"
 #include "ui_rs485.h"
 #include <QDebug>
 
@@ -13,18 +13,18 @@ RS485::RS485(QWidget *parent) :
     ui->baudSelect->addItem("9600");
     ui->baudSelect->addItem("19200");
     ui->baudSelect->addItem("38400");
+    ui->baudSelect->setCurrentRow(0);
     ui->interfaceSelect->addItem("RS485");
     ui->interfaceSelect->addItem("CAN");
+    ui->interfaceSelect->setCurrentRow(0);
     ui->baudSelect->setFont(font);
     ui->output->setReadOnly(true);
     ui->portSelect->setFont(font);
     ui->input->setFont(font);
     ui->output->setFont(font);
-    auto ports = QSerialPortInfo::availablePorts();
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExec()));
-    for (const QSerialPortInfo& info : ports)
-        ui->portSelect->addItem(info.portName());
+    updatePorts();
 }
 
 RS485::~RS485()
@@ -87,6 +87,8 @@ void RS485::setInterface(QString interface)
         currentInterface = interfaceMap[0];
     } else if (interface == "CAN") {
         currentInterface = interfaceMap[1];
+    } else {
+        currentInterface = "";
     }
 }
 
@@ -98,4 +100,17 @@ void RS485::on_sendButton_clicked()
     /*qDebug() << currentInterface + textToSend;
     qDebug() << textToSend;*/
     ui->input->clear();
+}
+
+void RS485::updatePorts()
+{
+    auto ports = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo& info : ports)
+        ui->portSelect->addItem(info.portName());
+}
+
+void RS485::on_portRefresh_clicked()
+{
+    ui->portSelect->clear();
+    updatePorts();
 }
