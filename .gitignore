@@ -1,3 +1,4 @@
 InterfaceEmulator.pro.user
 .DS_Store
 src/InterfaceEmulator.pro.user
+build*

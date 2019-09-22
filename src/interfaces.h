@@ -40,6 +40,8 @@ private slots:
 
     void on_portRefresh_clicked();
 
+    void updatePortStatus(int);
+
 private:
     Ui::RS485 *ui;
 };

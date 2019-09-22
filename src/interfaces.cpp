@@ -1,7 +1,11 @@
 #include "interfaces.h"
-#include "ui_rs485.h"
+#include "ui_interfaces.h"
 #include <QDebug>
 
+#define STATE_INIT 1
+#define STATE_OPENED 2
+#define STATE_CLOSED 3
+#define STATE_ERROR 4
 
 RS485::RS485(QWidget *parent) :
     QWidget(parent),
@@ -22,6 +26,8 @@ RS485::RS485(QWidget *parent) :
     ui->portSelect->setFont(font);
     ui->input->setFont(font);
     ui->output->setFont(font);
+    ui->portState->setAlignment(Qt::AlignCenter);
+    updatePortStatus(STATE_INIT);
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExec()));
     updatePorts();
@@ -32,17 +38,37 @@ RS485::~RS485()
     delete ui;
 }
 
+void RS485::updatePortStatus(int state)
+{
+    switch(state) {
+        case 1:
+            ui->portState->setText("Initialized");
+            ui->portState->setStyleSheet("QLabel { background-color : #001f3f; color : white; }");
+            break;
+        case 2:
+            ui->portState->setText("Port opened");
+            ui->portState->setStyleSheet("QLabel { background-color : #2ECC40; color : black; }");
+            break;
+        case 3:
+            ui->portState->setText("Port closed");
+            ui->portState->setStyleSheet("QLabel { background-color : #AAAAAA; color : black; }");
+            break;
+        case 4:
+            ui->portState->setText("Port error");
+            ui->portState->setStyleSheet("QLabel { background-color : #FF4136; color : black; }");
+            break;
+    }
+}
+
 void RS485::timerExec()
 {
     QByteArray data = port.readLine();
-    //qDebug() << QString::fromUtf8(data);
     if (data == "") {
         return;
     } else {
         ui->output->insertPlainText(data);
     }
 }
-
 
 
 void RS485::on_selectButton_clicked()
@@ -61,11 +87,11 @@ void RS485::on_selectButton_clicked()
     port.setFlowControl(flowControl);
     port.flush();
     if (port.isOpen()) {
-        ui->output->append("Port is open\n");
+        updatePortStatus(STATE_OPENED);
         timer->start(500);
         ui->input->setReadOnly(false);
     } else {
-        ui->output->append("Something wrong with conenction\n");
+        updatePortStatus(STATE_ERROR);
         timer->stop();
         ui->input->setReadOnly(true);
     }
@@ -76,9 +102,11 @@ void RS485::on_closeButton_clicked()
     port.close();
     if (!port.isOpen()) {
         timer->stop();
+        updatePortStatus(STATE_CLOSED);
+    } else {
+        updatePortStatus(STATE_ERROR);
     }
     ui->output->clear();
-    ui->output->append("Port is closed\n");
 }
 
 void RS485::setInterface(QString interface)
