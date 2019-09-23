@@ -13,7 +13,6 @@ RS485::RS485(QWidget *parent) :
 {
     ui->setupUi(this);
     QFont font("Times", 18);
-    ui->input->setReadOnly(true);
     ui->baudSelect->addItem("9600");
     ui->baudSelect->addItem("19200");
     ui->baudSelect->addItem("38400");
@@ -44,18 +43,22 @@ void RS485::updatePortStatus(int state)
         case 1:
             ui->portState->setText("Initialized");
             ui->portState->setStyleSheet("QLabel { background-color : #001f3f; color : white; }");
+            ui->input->setReadOnly(true);
             break;
         case 2:
             ui->portState->setText("Port opened");
             ui->portState->setStyleSheet("QLabel { background-color : #2ECC40; color : black; }");
+            ui->input->setReadOnly(false);
             break;
         case 3:
             ui->portState->setText("Port closed");
             ui->portState->setStyleSheet("QLabel { background-color : #AAAAAA; color : black; }");
+            ui->input->setReadOnly(true);
             break;
         case 4:
             ui->portState->setText("Port error");
             ui->portState->setStyleSheet("QLabel { background-color : #FF4136; color : black; }");
+            ui->input->setReadOnly(true);
             break;
     }
 }
@@ -89,11 +92,9 @@ void RS485::on_selectButton_clicked()
     if (port.isOpen()) {
         updatePortStatus(STATE_OPENED);
         timer->start(500);
-        ui->input->setReadOnly(false);
     } else {
         updatePortStatus(STATE_ERROR);
         timer->stop();
-        ui->input->setReadOnly(true);
     }
 }
 
