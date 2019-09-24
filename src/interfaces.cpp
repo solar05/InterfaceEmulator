@@ -12,24 +12,37 @@ RS485::RS485(QWidget *parent) :
     ui(new Ui::RS485)
 {
     ui->setupUi(this);
+    setup();
+}
+
+void RS485::setup()
+{
     QFont font("Times", 18);
-    ui->baudSelect->addItem("9600");
-    ui->baudSelect->addItem("19200");
-    ui->baudSelect->addItem("38400");
-    ui->baudSelect->setCurrentRow(0);
+    getBauds();
+    ui->baudSelect->setCurrentRow(1);
     ui->interfaceSelect->addItem("RS485");
     ui->interfaceSelect->addItem("CAN");
+    ui->interfaceSelect->addItem("Parallel");
     ui->interfaceSelect->setCurrentRow(0);
     ui->baudSelect->setFont(font);
     ui->output->setReadOnly(true);
     ui->portSelect->setFont(font);
     ui->input->setFont(font);
+    ui->interfaceSelect->setFont(font);
     ui->output->setFont(font);
     ui->portState->setAlignment(Qt::AlignCenter);
     updatePortStatus(STATE_INIT);
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExec()));
     updatePorts();
+}
+
+void RS485::getBauds()
+{
+    for (int baud = 4800; baud <= 78600; baud *= 2) {
+        ui->baudSelect->addItem(QString::number(baud));
+    }
+    ui->baudSelect->addItem("115200");
 }
 
 RS485::~RS485()
@@ -65,11 +78,15 @@ void RS485::updatePortStatus(int state)
 
 void RS485::timerExec()
 {
+    if (port.bytesAvailable()) {
     QByteArray data = port.readLine();
-    if (data == "") {
-        return;
-    } else {
-        ui->output->insertPlainText(data);
+    int statusCode = data.at(0);
+    qDebug() << statusCode;
+        if (statusCode == 1) {
+            ui->output->insertPlainText("OK");
+        } else {
+            ui->output->insertPlainText("Error");
+        }
     }
 }
 
@@ -113,11 +130,13 @@ void RS485::on_closeButton_clicked()
 void RS485::setInterface(QString interface)
 {
     if (interface == "RS485") {
-        currentInterface = interfaceMap[0];
+        currentInterface = interfaceMap[0].toUtf8();
     } else if (interface == "CAN") {
-        currentInterface = interfaceMap[1];
+        currentInterface = interfaceMap[1].toUtf8();
+    } else if (interface == "Parallel") {
+        currentInterface = interfaceMap[2].toUtf8();
     } else {
-        currentInterface = "";
+        currentInterface = "\x00";
     }
 }
 
@@ -125,9 +144,13 @@ void RS485::on_sendButton_clicked()
 {
     port.flush();
     QString textToSend = ui->input->toPlainText().append('\n');
-    port.write((currentInterface + textToSend).toUtf8());
-    /*qDebug() << currentInterface + textToSend;
-    qDebug() << textToSend;*/
+    QByteArray a = currentInterface;
+    QByteArray b = textToSend.toUtf8();
+    int length = b.length() + 2;
+    char* buffer = b.data();
+    a.append(length);
+    a.append(buffer);
+    port.write(a);
     ui->input->clear();
 }
 
