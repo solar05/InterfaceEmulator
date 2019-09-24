@@ -89,10 +89,16 @@ void RS485::printStatus(int statusCode)
 {
     switch(statusCode) {
         case 1:
-            ui->output->insertPlainText("OK");
+            ui->output->insertPlainText("RS485 response: OK\n");
+            break;
+        case 2:
+            ui->output->insertPlainText("CAN response: OK\n");
+            break;
+        case 3:
+            ui->output->insertPlainText("Parallel response: OK\n");
             break;
         default:
-            ui->output->insertPlainText("Error");
+            ui->output->insertPlainText("Error\n");
             break;
     }
 }
@@ -153,10 +159,9 @@ void RS485::on_sendButton_clicked()
     QString textToSend = ui->input->toPlainText().append('\n');
     QByteArray preparedFrame = currentInterface;
     QByteArray preparedText = textToSend.toUtf8();
-    int length = preparedText.length() + 2;
-    char* buffer = preparedText.data();
+    qint8 length = preparedText.length();
     preparedFrame.append(length);
-    preparedFrame.append(buffer);
+    preparedFrame.append(preparedText);
     qDebug() << preparedFrame;
     port.write(preparedFrame);
     ui->input->clear();
