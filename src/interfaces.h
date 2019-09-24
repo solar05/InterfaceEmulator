@@ -46,6 +46,8 @@ private slots:
 
     void setup();
 
+    void printStatus(int);
+
 private:
     Ui::RS485 *ui;
 };

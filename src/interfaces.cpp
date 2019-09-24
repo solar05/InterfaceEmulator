@@ -81,12 +81,19 @@ void RS485::timerExec()
     if (port.bytesAvailable()) {
     QByteArray data = port.readLine();
     int statusCode = data.at(0);
-    qDebug() << statusCode;
-        if (statusCode == 1) {
+    printStatus(statusCode);
+    }
+}
+
+void RS485::printStatus(int statusCode)
+{
+    switch(statusCode) {
+        case 1:
             ui->output->insertPlainText("OK");
-        } else {
+            break;
+        default:
             ui->output->insertPlainText("Error");
-        }
+            break;
     }
 }
 
@@ -144,13 +151,14 @@ void RS485::on_sendButton_clicked()
 {
     port.flush();
     QString textToSend = ui->input->toPlainText().append('\n');
-    QByteArray a = currentInterface;
-    QByteArray b = textToSend.toUtf8();
-    int length = b.length() + 2;
-    char* buffer = b.data();
-    a.append(length);
-    a.append(buffer);
-    port.write(a);
+    QByteArray preparedFrame = currentInterface;
+    QByteArray preparedText = textToSend.toUtf8();
+    int length = preparedText.length() + 2;
+    char* buffer = preparedText.data();
+    preparedFrame.append(length);
+    preparedFrame.append(buffer);
+    qDebug() << preparedFrame;
+    port.write(preparedFrame);
     ui->input->clear();
 }
 

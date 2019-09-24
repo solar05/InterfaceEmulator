@@ -8,6 +8,7 @@ void setup() {
 void loop() {
   while(Serial.available()) {
     String a = Serial.readString();
+    //вычистить первые два байта
     if (a.length() == a[1]) {
       Serial.write(1);
     } else {
