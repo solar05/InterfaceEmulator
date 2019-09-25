@@ -1,0 +1,6 @@
+<map id="SerialMessageMC::checkCrc" name="SerialMessageMC::checkCrc">
+<area shape="rect" id="node1" title="Проверяет соответствие контрольной суммы из пакета расчитанной контрольной сумме" alt="" coords="5,56,196,83"/>
+<area shape="rect" id="node2" href="$namespace_serial_message_m_c.html#aa6371d0de8ef050fd15692986d3417e1" title="Функция расчета CRC16." alt="" coords="256,5,427,32"/>
+<area shape="rect" id="node3" href="$namespace_serial_message_m_c.html#a71b81f61191599a8fdc5b37675d5e28f" title="Получает указатель на массив данных из пакета" alt="" coords="251,56,432,83"/>
+<area shape="rect" id="node4" href="$namespace_serial_message_m_c.html#adc8df29e5d96553fedfa1c0648e05d65" title="Получает заголовок из пакета" alt="" coords="244,107,439,133"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="SerialMessage::setData" name="SerialMessage::setData">
+<area shape="rect" id="node1" title="Сеттер для данных." alt="" coords="5,81,167,108"/>
+<area shape="rect" id="node2" href="$namespace_serial_message_m_c.html#aa6371d0de8ef050fd15692986d3417e1" title="Функция расчета CRC16." alt="" coords="215,5,385,32"/>
+<area shape="rect" id="node3" href="C:/Users/Leon/Documents/test/qtcore.tags$qbytearray.html#data" title=" " alt="" coords="239,56,361,83"/>
+<area shape="rect" id="node4" href="C:/Users/Leon/Documents/test/qtcore.tags$qbytearray.html#length" title=" " alt="" coords="233,107,367,133"/>
+<area shape="rect" id="node5" href="C:/Users/Leon/Documents/test/qtcore.tags$qstring.html#toLatin1" title=" " alt="" coords="240,157,360,184"/>
+</map>
