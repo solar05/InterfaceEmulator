@@ -1,0 +1,6 @@
+<map id="SerialMessageMC::Crc16" name="SerialMessageMC::Crc16">
+<area shape="rect" id="node1" title="Функция расчета CRC16." alt="" coords="256,56,427,83"/>
+<area shape="rect" id="node2" href="$namespace_serial_message_m_c.html#a270257afa814669e0f0888609c6571c3" title="Проверяет соответствие контрольной суммы из пакета расчитанной контрольной сумме" alt="" coords="11,5,202,32"/>
+<area shape="rect" id="node3" href="$class_serial_message.html#aef84d2a1b8928bf39c0f4e59bdf7e36f" title="Конструктор по умолчанию." alt="" coords="5,56,208,83"/>
+<area shape="rect" id="node4" href="$class_serial_message.html#a07ebad5adfaf953ee2f98333c577f603" title="Сеттер для данных." alt="" coords="26,107,187,133"/>
+</map>

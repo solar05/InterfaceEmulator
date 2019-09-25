@@ -1,0 +1,4 @@
+<map id="SerialMessage" name="SerialMessage">
+<area shape="rect" id="node1" title="Класс для создание пакета на стороне ПК" alt="" coords="15,175,173,325"/>
+<area shape="rect" id="node2" href="$struct_serial_message_m_c_1_1_header.html" title="Структура, описывающая заголовок пакета." alt="" coords="5,5,183,112"/>
+</map>

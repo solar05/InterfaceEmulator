@@ -1,0 +1,4 @@
+<map id="SerialMessageMC::getData" name="SerialMessageMC::getData">
+<area shape="rect" id="node1" title="Получает указатель на массив данных из пакета" alt="" coords="244,5,425,32"/>
+<area shape="rect" id="node2" href="$namespace_serial_message_m_c.html#a270257afa814669e0f0888609c6571c3" title="Проверяет соответствие контрольной суммы из пакета расчитанной контрольной сумме" alt="" coords="5,5,196,32"/>
+</map>
