@@ -1,31 +1,33 @@
+
+#include <uCRC16BPBLib.h>
+ 
+char test[5];
+ 
 void setup() {
   Serial.begin(9600);
   Serial.flush();
+  test[0] = '\x01';
+  test[1] = 't';
+  test[2] = 'e';
+  test[3] = 's';
+  test[4] = 't';
 }
-
-void loop() {
-  while(Serial.available()) {
-    String a = Serial.readString();
-    int interface = a[0];
-    int sum = a[1];
-    a.remove(0,2);
-    if (a.length() == sum) {
-      switch (interface) {
-        case 1:
-          Serial.write(1);
-          break;
-        case 2:
-          Serial.write(2);
-          break;
-        case 3:
-          Serial.write(3);
-          break;
-        default:
-          Serial.write(0);
-          break;
-      }
-    } else {
-      Serial.write(0);
-    }
+ 
+ 
+uCRC16BPBLib crc;
+ 
+uint16_t crcStringBytes(char * string, uint16_t length) {
+  uint16_t i;
+  crc.reset();
+  for (i = length; i > 0; string++, i--) {
+    crc.feedByte(*string);
   }
+  return crc.getResult();
+}
+ 
+void loop() {
+  uint16_t crc;
+  Serial.print(crcStringBytes(test,5));
+  Serial.print("\n");
+  delay(2000);
 }
