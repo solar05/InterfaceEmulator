@@ -156,7 +156,7 @@ void RS485::setInterface(QString interface)
 void RS485::on_sendButton_clicked()
 {
     port.flush();
-    QString textToSend = ui->input->toPlainText().append('\n');
+    QString textToSend = ui->input->toPlainText();
     QByteArray preparedFrame = currentInterface;
     QByteArray preparedText = textToSend.toUtf8();
     preparedFrame.append(preparedText);
@@ -167,7 +167,6 @@ void RS485::on_sendButton_clicked()
     charCheckSum[1] = initialCheckSum & 0xff;
     QByteArray checkSum(charCheckSum,2);
     preparedFrame.append(checkSum);
-    qDebug() << preparedFrame;
     port.write(preparedFrame);
     ui->input->clear();
 }
