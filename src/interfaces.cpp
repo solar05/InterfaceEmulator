@@ -8,6 +8,7 @@
 #define STATE_OPENED 2
 #define STATE_CLOSED 3
 #define STATE_ERROR 4
+#define STATE_NOT_SELECTED 5
 
 using namespace std;
 
@@ -68,6 +69,11 @@ void Interfaces::updatePortStatus(int state)
             ui->portState->setStyleSheet("QLabel { background-color : #FF4136; color : black; }");
             ui->input->setReadOnly(true);
             break;
+        case 5:
+            ui->portState->setText("Port not selected");
+            ui->portState->setStyleSheet("QLabel { background-color : #808000; color : white; }");
+            ui->input->setReadOnly(true);
+            break;
     }
 }
 
@@ -75,7 +81,7 @@ void Interfaces::timerExec()
 {
     if (port.bytesAvailable()) {
     QByteArray recievedBytes = port.readAll();
-    char *recievedPacket = recievedBytes.data();
+    //char *recievedPacket = recievedBytes.data();
     //SerialMessageMC::Header* gotHeader = SerialMessageMC::getHeader(recievedPacket);
     //unsigned char* gotData             = SerialMessageMC::getData  (recievedPacket);
     //int computedCrc                    = SerialMessageMC::Crc16    (gotData, gotHeader->length - 4);
@@ -117,9 +123,15 @@ SerialMessage setInterface(QString interface, SerialMessage msg)
 void Interfaces::on_selectButton_clicked()
 {
     ui->output->clear();
-    QString portChoice = ui->portSelect->currentItem()->text();
+    QListWidgetItem *portChoice = ui->portSelect->currentItem();
+    if(portChoice) {
+        QString portName = portChoice->text();
+        port.setPortName(portName);
+    } else {
+        updatePortStatus(STATE_NOT_SELECTED);
+        return;
+    }
     currentInterface = ui->interfaceSelect->currentItem()->text();
-    port.setPortName(portChoice);
     port.open(QIODevice::ReadWrite);
     port.setBaudRate(9600);
     port.setDataBits(dataBits);
