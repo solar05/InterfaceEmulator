@@ -39,7 +39,8 @@ namespace SerialMessageMC {
      */
     enum Interface {
         RS485 = 0,
-        CAN = 1
+        CAN = 1,
+        PARALLEL = 2
     };
 
     /**

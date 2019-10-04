@@ -1,4 +1,4 @@
-InterfaceEmulator.pro.user
+*.user
 .DS_Store
 src/InterfaceEmulator.pro.user
 build*

@@ -94,20 +94,17 @@
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>60</height>
+           <height>130</height>
           </size>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="baudLabel">
          <property name="text">
-          <string>Baud</string>
+          <string>Baud: 9600</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QListWidget" name="baudSelect"/>
        </item>
        <item>
         <widget class="QPushButton" name="selectButton">

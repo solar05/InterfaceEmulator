@@ -1,11 +1,15 @@
 #include "interfaces.h"
 #include "ui_interfaces.h"
+#include "../Protocol/serialmessage.h"
 #include <QDebug>
+#include "iostream"
 
 #define STATE_INIT 1
 #define STATE_OPENED 2
 #define STATE_CLOSED 3
 #define STATE_ERROR 4
+
+using namespace std;
 
 RS485::RS485(QWidget *parent) :
     QWidget(parent),
@@ -18,13 +22,12 @@ RS485::RS485(QWidget *parent) :
 void RS485::setup()
 {
     QFont font("Times", 18);
-    getBauds();
-    ui->baudSelect->setCurrentRow(1);
+
     ui->interfaceSelect->addItem("RS485");
     ui->interfaceSelect->addItem("CAN");
     ui->interfaceSelect->addItem("Parallel");
     ui->interfaceSelect->setCurrentRow(0);
-    ui->baudSelect->setFont(font);
+    ui->baudLabel->setFont(font);
     ui->output->setReadOnly(true);
     ui->portSelect->setFont(font);
     ui->input->setFont(font);
@@ -35,14 +38,6 @@ void RS485::setup()
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExec()));
     updatePorts();
-}
-
-void RS485::getBauds()
-{
-    for (int baud = 4800; baud <= 78600; baud *= 2) {
-        ui->baudSelect->addItem(QString::number(baud));
-    }
-    ui->baudSelect->addItem("115200");
 }
 
 RS485::~RS485()
@@ -79,9 +74,13 @@ void RS485::updatePortStatus(int state)
 void RS485::timerExec()
 {
     if (port.bytesAvailable()) {
-    QByteArray data = port.readLine();
-    int statusCode = data.at(0);
-    printStatus(statusCode);
+    QByteArray recievedBytes = port.readAll();
+    char *recievedPacket = recievedBytes.data();
+    //SerialMessageMC::Header* gotHeader = SerialMessageMC::getHeader(recievedPacket);
+    //unsigned char* gotData             = SerialMessageMC::getData  (recievedPacket);
+    //int computedCrc                    = SerialMessageMC::Crc16    (gotData, gotHeader->length - 4);
+    //int statusCode = data.at(0);
+    //printStatus(statusCode);
     }
 }
 
@@ -103,17 +102,26 @@ void RS485::printStatus(int statusCode)
     }
 }
 
+SerialMessage setInterface(QString interface, SerialMessage msg)
+{
+    if (interface == "RS485") {
+        msg.setType(SerialMessageMC::Interface::RS485);
+    } else if (interface == "CAN") {
+        msg.setType(SerialMessageMC::Interface::CAN);
+    } else if (interface == "Parallel") {
+        msg.setType(SerialMessageMC::Interface::PARALLEL);
+    }
+    return msg;
+}
 
 void RS485::on_selectButton_clicked()
 {
     ui->output->clear();
     QString portChoice = ui->portSelect->currentItem()->text();
-    QString baudRate = ui->baudSelect->currentItem()->text();
-    QString selectedInterface = ui->interfaceSelect->currentItem()->text();
-    setInterface(selectedInterface);
+    currentInterface = ui->interfaceSelect->currentItem()->text();
     port.setPortName(portChoice);
     port.open(QIODevice::ReadWrite);
-    port.setBaudRate(baudRate.toInt());
+    port.setBaudRate(9600);
     port.setDataBits(dataBits);
     port.setParity(parity);
     port.setStopBits(stopBits);
@@ -140,34 +148,17 @@ void RS485::on_closeButton_clicked()
     ui->output->clear();
 }
 
-void RS485::setInterface(QString interface)
-{
-    if (interface == "RS485") {
-        currentInterface = interfaceMap[0].toUtf8();
-    } else if (interface == "CAN") {
-        currentInterface = interfaceMap[1].toUtf8();
-    } else if (interface == "Parallel") {
-        currentInterface = interfaceMap[2].toUtf8();
-    } else {
-        currentInterface = "\x00";
-    }
-}
 
 void RS485::on_sendButton_clicked()
 {
     port.flush();
     QString textToSend = ui->input->toPlainText();
-    QByteArray preparedFrame = currentInterface;
     QByteArray preparedText = textToSend.toUtf8();
-    preparedFrame.append(preparedText);
-    char* buffer = preparedFrame.data();
-    quint16 initialCheckSum = qChecksum(buffer, strlen(buffer));
-    char charCheckSum[2] = {};
-    charCheckSum[0] = (initialCheckSum >> 8) & 0xff;
-    charCheckSum[1] = initialCheckSum & 0xff;
-    QByteArray checkSum(charCheckSum,2);
-    preparedFrame.append(checkSum);
-    port.write(preparedFrame);
+    SerialMessage msg(textToSend);
+    setInterface(currentInterface, msg);
+    port.write(msg.getPackedMessage());
+    cout << msg.toString();
+    port.waitForBytesWritten();
     ui->input->clear();
 }
 

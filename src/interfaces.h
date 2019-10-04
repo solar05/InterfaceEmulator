@@ -23,8 +23,7 @@ public:
     QSerialPort::StopBits stopBits;
     QSerialPort::FlowControl flowControl;
     QTimer *timer;
-    QString interfaceMap[3] = {"\x01", "\x02", "\x03"};
-    QByteArray currentInterface;
+    QString currentInterface;
     void updatePorts();
 
 private slots:
@@ -36,13 +35,9 @@ private slots:
 
     void on_sendButton_clicked();
 
-    void setInterface(QString);
-
     void on_portRefresh_clicked();
 
     void updatePortStatus(int);
-
-    void getBauds();
 
     void setup();
 
