@@ -164,13 +164,19 @@ void Interfaces::on_sendButton_clicked()
 
 void Interfaces::updatePorts()
 {
+    ui->portSelect->clear();
     auto ports = QSerialPortInfo::availablePorts();
     for (const QSerialPortInfo& info : ports)
         ui->portSelect->addItem(info.portName());
+    if (ui->portSelect->count() < 1) {
+        ui->portSelect->addItem("There is no port available,\nplease check ports and press refresh ports button.");
+        ui->selectButton->setEnabled(false);
+    } else {
+        ui->sendButton->setEnabled(true);
+    }
 }
 
 void Interfaces::on_portRefresh_clicked()
 {
-    ui->portSelect->clear();
     updatePorts();
 }
