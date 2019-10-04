@@ -11,19 +11,19 @@
 
 using namespace std;
 
-RS485::RS485(QWidget *parent) :
+Interfaces::Interfaces(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::RS485)
+    ui(new Ui::Interfaces)
 {
     ui->setupUi(this);
     setup();
 }
 
-void RS485::setup()
+void Interfaces::setup()
 {
     QFont font("Times", 18);
 
-    ui->interfaceSelect->addItem("RS485");
+    ui->interfaceSelect->addItem("Interfaces");
     ui->interfaceSelect->addItem("CAN");
     ui->interfaceSelect->addItem("Parallel");
     ui->interfaceSelect->setCurrentRow(0);
@@ -40,12 +40,12 @@ void RS485::setup()
     updatePorts();
 }
 
-RS485::~RS485()
+Interfaces::~Interfaces()
 {
     delete ui;
 }
 
-void RS485::updatePortStatus(int state)
+void Interfaces::updatePortStatus(int state)
 {
     switch(state) {
         case 1:
@@ -71,7 +71,7 @@ void RS485::updatePortStatus(int state)
     }
 }
 
-void RS485::timerExec()
+void Interfaces::timerExec()
 {
     if (port.bytesAvailable()) {
     QByteArray recievedBytes = port.readAll();
@@ -84,11 +84,11 @@ void RS485::timerExec()
     }
 }
 
-void RS485::printStatus(int statusCode)
+void Interfaces::printStatus(int statusCode)
 {
     switch(statusCode) {
         case 1:
-            ui->output->insertPlainText("RS485 response: OK\n");
+            ui->output->insertPlainText("Interfaces response: OK\n");
             break;
         case 2:
             ui->output->insertPlainText("CAN response: OK\n");
@@ -104,7 +104,7 @@ void RS485::printStatus(int statusCode)
 
 SerialMessage setInterface(QString interface, SerialMessage msg)
 {
-    if (interface == "RS485") {
+    if (interface == "Interfaces") {
         msg.setType(SerialMessageMC::Interface::RS485);
     } else if (interface == "CAN") {
         msg.setType(SerialMessageMC::Interface::CAN);
@@ -114,7 +114,7 @@ SerialMessage setInterface(QString interface, SerialMessage msg)
     return msg;
 }
 
-void RS485::on_selectButton_clicked()
+void Interfaces::on_selectButton_clicked()
 {
     ui->output->clear();
     QString portChoice = ui->portSelect->currentItem()->text();
@@ -136,7 +136,7 @@ void RS485::on_selectButton_clicked()
     }
 }
 
-void RS485::on_closeButton_clicked()
+void Interfaces::on_closeButton_clicked()
 {
     port.close();
     if (!port.isOpen()) {
@@ -149,7 +149,7 @@ void RS485::on_closeButton_clicked()
 }
 
 
-void RS485::on_sendButton_clicked()
+void Interfaces::on_sendButton_clicked()
 {
     port.flush();
     QString textToSend = ui->input->toPlainText();
@@ -162,14 +162,14 @@ void RS485::on_sendButton_clicked()
     ui->input->clear();
 }
 
-void RS485::updatePorts()
+void Interfaces::updatePorts()
 {
     auto ports = QSerialPortInfo::availablePorts();
     for (const QSerialPortInfo& info : ports)
         ui->portSelect->addItem(info.portName());
 }
 
-void RS485::on_portRefresh_clicked()
+void Interfaces::on_portRefresh_clicked()
 {
     ui->portSelect->clear();
     updatePorts();

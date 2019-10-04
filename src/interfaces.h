@@ -1,5 +1,5 @@
-#ifndef RS485_H
-#define RS485_H
+#ifndef Interfaces_H
+#define Interfaces_H
 
 #include <QWidget>
 #include <QSerialPort>
@@ -7,16 +7,16 @@
 #include <QTimer>
 
 namespace Ui {
-class RS485;
+class Interfaces;
 }
 
-class RS485 : public QWidget
+class Interfaces : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit RS485(QWidget *parent = nullptr);
-    ~RS485();
+    explicit Interfaces(QWidget *parent = nullptr);
+    ~Interfaces();
     QSerialPort port;
     QSerialPort::DataBits dataBits;
     QSerialPort::Parity parity;
@@ -44,7 +44,7 @@ private slots:
     void printStatus(int);
 
 private:
-    Ui::RS485 *ui;
+    Ui::Interfaces *ui;
 };
 
-#endif // RS485_H
+#endif // Interfaces_H
