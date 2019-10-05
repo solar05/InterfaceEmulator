@@ -35,6 +35,7 @@ void Interfaces::setup()
     ui->interfaceSelect->setFont(font);
     ui->output->setFont(font);
     ui->portState->setAlignment(Qt::AlignCenter);
+    ui->portState->setFont(font);
     updatePortStatus(STATE_INIT);
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(timerExec()));
@@ -124,13 +125,12 @@ void Interfaces::on_selectButton_clicked()
 {
     ui->output->clear();
     QListWidgetItem *portChoice = ui->portSelect->currentItem();
-    if(portChoice) {
-        QString portName = portChoice->text();
-        port.setPortName(portName);
-    } else {
+    if(!portChoice) {
         updatePortStatus(STATE_NOT_SELECTED);
         return;
     }
+    QString portName = portChoice->text();
+    port.setPortName(portName);
     currentInterface = ui->interfaceSelect->currentItem()->text();
     port.open(QIODevice::ReadWrite);
     port.setBaudRate(9600);
