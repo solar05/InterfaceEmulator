@@ -81,21 +81,21 @@ void Interfaces::updatePortStatus(int state)
 void Interfaces::timerExec()
 {
     if (port.bytesAvailable()) {
-    QByteArray recievedBytes = port.readAll();
-    //char *recievedPacket = recievedBytes.data();
-    //SerialMessageMC::Header* gotHeader = SerialMessageMC::getHeader(recievedPacket);
-    //unsigned char* gotData             = SerialMessageMC::getData  (recievedPacket);
-    //int computedCrc                    = SerialMessageMC::Crc16    (gotData, gotHeader->length - 4);
-    //int statusCode = data.at(0);
-    //printStatus(statusCode);
+        QByteArray recievedByte = port.readAll();
+        int statusCode = recievedByte.at(0);
+        printStatus(statusCode);
     }
 }
 
+
+/**
+ *  Получаем статус код ответа, в зависимости от байта пишем с какого интерфейса пришел ответ, иначе пишем что произошла ошибка с обработкой
+ */
 void Interfaces::printStatus(int statusCode)
 {
     switch(statusCode) {
         case 1:
-            ui->output->insertPlainText("Interfaces response: OK\n");
+            ui->output->insertPlainText("RS485 response: OK\n");
             break;
         case 2:
             ui->output->insertPlainText("CAN response: OK\n");
@@ -169,8 +169,8 @@ void Interfaces::on_sendButton_clicked()
     SerialMessage msg(textToSend);
     msg = setInterface(currentInterface, msg);
     port.write(msg.getPackedMessage());
-    cout << msg.toString();
     port.waitForBytesWritten();
+    cout << msg.toString();
     ui->input->clear();
 }
 
