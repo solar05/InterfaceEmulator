@@ -24,7 +24,7 @@ void Interfaces::setup()
 {
     QFont font("Times", 18);
 
-    ui->interfaceSelect->addItem("Interfaces");
+    ui->interfaceSelect->addItem("RS485");
     ui->interfaceSelect->addItem("CAN");
     ui->interfaceSelect->addItem("Parallel");
     ui->interfaceSelect->setCurrentRow(0);
@@ -111,7 +111,7 @@ void Interfaces::printStatus(int statusCode)
 
 SerialMessage setInterface(QString interface, SerialMessage msg)
 {
-    if (interface == "Interfaces") {
+    if (interface == "RS485") {
         msg.setType(SerialMessageMC::Interface::RS485);
     } else if (interface == "CAN") {
         msg.setType(SerialMessageMC::Interface::CAN);
@@ -167,7 +167,7 @@ void Interfaces::on_sendButton_clicked()
     QString textToSend = ui->input->toPlainText();
     QByteArray preparedText = textToSend.toUtf8();
     SerialMessage msg(textToSend);
-    setInterface(currentInterface, msg);
+    msg = setInterface(currentInterface, msg);
     port.write(msg.getPackedMessage());
     cout << msg.toString();
     port.waitForBytesWritten();
