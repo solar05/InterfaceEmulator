@@ -29,6 +29,10 @@ void Interfaces::setup()
     ui->interfaceSelect->addItem("Parallel");
     ui->interfaceSelect->setCurrentRow(0);
     ui->baudLabel->setFont(font);
+    ui->label->setFont(font);
+    ui->label_2->setFont(font);
+    ui->label_3->setFont(font);
+    ui->label_4->setFont(font);
     ui->output->setReadOnly(true);
     ui->portSelect->setFont(font);
     ui->input->setFont(font);
@@ -52,26 +56,31 @@ void Interfaces::updatePortStatus(int state)
     switch(state) {
         case 1:
             ui->portState->setText("Initialized");
+            ui->sendButton->setDisabled(true);
             ui->portState->setStyleSheet("QLabel { background-color : #001f3f; color : white; }");
             ui->input->setReadOnly(true);
             break;
         case 2:
             ui->portState->setText("Port opened");
+            ui->sendButton->setDisabled(false);
             ui->portState->setStyleSheet("QLabel { background-color : #2ECC40; color : black; }");
             ui->input->setReadOnly(false);
             break;
         case 3:
             ui->portState->setText("Port closed");
+            ui->sendButton->setDisabled(true);
             ui->portState->setStyleSheet("QLabel { background-color : #AAAAAA; color : black; }");
             ui->input->setReadOnly(true);
             break;
         case 4:
             ui->portState->setText("Port error");
+            ui->sendButton->setDisabled(true);
             ui->portState->setStyleSheet("QLabel { background-color : #FF4136; color : black; }");
             ui->input->setReadOnly(true);
             break;
         case 5:
             ui->portState->setText("Port not selected");
+            ui->sendButton->setDisabled(true);
             ui->portState->setStyleSheet("QLabel { background-color : #808000; color : white; }");
             ui->input->setReadOnly(true);
             break;
@@ -83,6 +92,7 @@ void Interfaces::timerExec()
     if (port.bytesAvailable()) {
         QByteArray recievedByte = port.readAll();
         int statusCode = recievedByte.at(0);
+        qDebug() << statusCode;
         printStatus(statusCode);
     }
 }
@@ -169,7 +179,7 @@ void Interfaces::on_sendButton_clicked()
     SerialMessage msg(textToSend);
     msg = setInterface(currentInterface, msg);
     port.write(msg.getPackedMessage());
-    port.waitForBytesWritten();
+    port.waitForBytesWritten(10);
     cout << msg.toString();
     ui->input->clear();
 }
@@ -181,7 +191,8 @@ void Interfaces::updatePorts()
     for (const QSerialPortInfo& info : ports)
         ui->portSelect->addItem(info.portName());
     if (ui->portSelect->count() < 1) {
-        ui->portSelect->addItem("There is no port available,\nplease check ports and press refresh ports button.");
+        ui->portSelect->addItem("There is no port available,\nplease check ports\nand press refresh ports button.");
+        ui->portSelect->setDisabled(true);
         ui->selectButton->setEnabled(false);
     } else {
         ui->sendButton->setEnabled(true);
